@@ -8,12 +8,14 @@
   "license": "MIT",
   "scripts": {
     "start": "run-p --aggregate-output -l build typecheck lint",
-    "build": "esbuild esbuild.config.ts --platform=node --outfile=ts-out/esbuild.mjs && node dist/esbuild.mjs",
+    "build": "esbuild esbuild.config.ts --platform=node --outfile=ts-out/esbuild.mjs && node ts-out/esbuild.mjs",
+    "dev": "yarn build --dev",
     "pretty": "prettier --write \"src/**/*.{js,ts,tsx,scss,css,html}\"",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .js,.ts,.tsx --fix"
   },
   "devDependencies": {
+    "@types/preact-custom-element": "^4.0.1",
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
     "esbuild": "^0.18.19",

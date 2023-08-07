@@ -223,6 +223,13 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
+"@types/preact-custom-element@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@types/preact-custom-element/-/preact-custom-element-4.0.1.tgz#1fdceb3629d368aa4558e12a110802f4fecba802"
+  integrity sha512-oduUzzxJAZ7qWJ5EsUffxvpRFnzgffilDlfxLR9Q2YkEzSfn3vudIrnDg0AiQgZJ0GkAjLzkxQyAxH6sS/EQdQ==
+  dependencies:
+    preact "^10.0.0"
+
 "@types/semver@^7.3.12", "@types/semver@^7.5.0":
   version "7.5.0"
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.5.0.tgz#591c1ce3a702c45ee15f47a42ade72c2fd78978a"
@@ -2088,7 +2095,7 @@ preact-shadow-dom@^1.0.1:
   resolved "https://registry.yarnpkg.com/preact-shadow-dom/-/preact-shadow-dom-1.0.1.tgz#5286f4ab6edc067188431d5a9de35408a7a0ac2a"
   integrity sha512-KVWF983Ju9w+zt6KXVst/A62moecXipjpVIYQ8EjZfkPe+XFKC3LyypG9TlBTwUdwPSCjMDJSey5Zz5hEdCDvQ==
 
-preact@^10.16.0:
+preact@^10.0.0, preact@^10.16.0:
   version "10.16.0"
   resolved "https://registry.yarnpkg.com/preact/-/preact-10.16.0.tgz#68a06d70b191b8a313ea722d61e09c6b2a79a37e"
   integrity sha512-XTSj3dJ4roKIC93pald6rWuB2qQJO9gO2iLLyTe87MrjQN+HklueLsmskbywEWqCHlclgz3/M4YLL2iBr9UmMA==
