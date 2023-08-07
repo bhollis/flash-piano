@@ -1,0 +1,38 @@
+{
+  "name": "flash-piano",
+  "version": "1.0.0",
+  "description": "A web component for rendering interactive piano keyboards",
+  "type": "module",
+  "repository": "https://github.com/bhollis/flash-piano",
+  "author": "Ben Hollis <ben@benhollis.net>",
+  "license": "MIT",
+  "scripts": {
+    "start": "run-p --aggregate-output -l build typecheck lint",
+    "build": "esbuild esbuild.config.ts --platform=node --outfile=ts-out/esbuild.mjs && node dist/esbuild.mjs",
+    "pretty": "prettier --write \"src/**/*.{js,ts,tsx,scss,css,html}\"",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .js,.ts,.tsx --fix"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "esbuild": "^0.18.19",
+    "eslint": "^8.46.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-github": "^4.9.2",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-jsx-expressions": "^1.3.1",
+    "eslint-plugin-react": "^7.33.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-sonarjs": "^0.20.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.0.1",
+    "prettier-plugin-organize-imports": "^3.2.3",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "preact": "^10.16.0",
+    "preact-custom-element": "^4.2.1",
+    "preact-shadow-dom": "^1.0.1"
+  }
+}

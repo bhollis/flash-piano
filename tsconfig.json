@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "outDir": "./ts-out/",
+    "sourceMap": true,
+    "module": "ESNext",
+    "target": "ESNext",
+    "noEmit": true,
+    "jsx": "preserve",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
+    "jsxImportSource": "preact",
+    "moduleResolution": "bundler",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "allowJs": true
+  },
+  "include": ["./src/**/*"],
+  "paths": {
+    "react": ["./node_modules/preact/compat/"],
+    "react-dom": ["./node_modules/preact/compat/"]
+  }
+}

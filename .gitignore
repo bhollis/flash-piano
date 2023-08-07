@@ -1,0 +1,10 @@
+ts-out/
+lib/
+node_modules/
+*.DS_Store
+.npmrc
+npm-debug.log
+.nvmrc
+yarn-error.log
+.eslintcache
+eslint_report.json
