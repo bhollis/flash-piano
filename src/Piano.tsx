@@ -1,4 +1,4 @@
-import { useSignal } from '@preact/signals';
+import { computed, signal, useSignal, useSignalEffect } from '@preact/signals';
 import './Piano.css';
 
 const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
@@ -9,6 +9,7 @@ interface PianoKeyData {
   note: string;
   sharp: boolean;
   octave: number;
+  midiNote: number;
 }
 const keyboardKeys = ['a', 'w', 's', 'e', 'd', 'f', 't', 'g', 'y', 'h', 'u', 'j', 'k'];
 let localizedKeyboardKeys = keyboardKeys;
@@ -34,6 +35,7 @@ for (let i = 0; i < 88; i++) {
     baseNote,
     sharp,
     octave,
+    midiNote: i + 21,
   });
 }
 
@@ -57,6 +59,31 @@ function findKeyboardKey(pianoKey: PianoKeyData, currentOctave: number) {
   const keyIndex = notes.indexOf(pianoKey.baseNote) - 3 + offset * notes.length;
   return localizedKeyboardKeys[keyIndex];
 }
+
+const midi = signal<MIDIAccess | undefined>(undefined);
+let triedMidi = false;
+async function getMidi() {
+  if (!triedMidi) {
+    triedMidi = true;
+    navigator.requestMIDIAccess().then(
+      (midiAccess) => {
+        console.log('Midi!', midiAccess);
+        midi.value = midiAccess;
+      },
+      () => {
+        console.log('No midi');
+      },
+    );
+  }
+}
+
+const midiDevices = computed(() => {
+  const names: string[] = [];
+  for (const input of midi.value?.inputs.values() ?? []) {
+    names.push(input.name ?? 'Unknown');
+  }
+  return names;
+});
 
 export default function Piano() {
   const pressedKeys = useSignal<PianoKeyData[]>([]);
@@ -89,8 +116,55 @@ export default function Piano() {
     }
   };
 
+  const handleFocus = () => {
+    getMidi();
+  };
+
+  useSignalEffect(() => {
+    const currentMidi = midi.value;
+    if (!currentMidi) {
+      return;
+    }
+
+    for (const input of currentMidi.inputs.values()) {
+      input.onmidimessage = (message) => {
+        const data = (message as any).data as Uint8Array;
+        const signal = data[0] & 0xf0;
+        const note = data[1];
+
+        const pianoKey = keys.find((k) => k.midiNote === note);
+        if (!pianoKey) {
+          return;
+        }
+
+        if (signal === 0x90) {
+          handleKeyDown(pianoKey);
+        } else if (signal === 0x80) {
+          handleKeyUp(pianoKey);
+        }
+      };
+    }
+
+    for (const output of currentMidi.outputs.values()) {
+      console.log({ output });
+    }
+
+    // TODO: better cleanup, listen to status change events
+    return () => {
+      for (const entry of currentMidi.inputs) {
+        const input = entry[1];
+        input.onmidimessage = null;
+      }
+    };
+  });
+
   return (
-    <div tabIndex={0} onKeyDown={handleKeyboardKeyDown} onKeyUp={handleKeyboardKeyUp}>
+    <div
+      tabIndex={0}
+      onKeyDown={handleKeyboardKeyDown}
+      onKeyUp={handleKeyboardKeyUp}
+      onFocus={handleFocus}
+    >
       <div className="keyboard">
         {keys.map((key) => (
           <Key
@@ -112,6 +186,7 @@ export default function Piano() {
           showKeyboardMapping: showKeyboardMapping.value,
         })}
       </div>
+      <div>{midiDevices}</div>
     </div>
   );
 }
