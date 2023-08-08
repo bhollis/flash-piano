@@ -1,0 +1,27 @@
+.keyboard {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.5em;
+  display: flex;
+  flex-direction: row;
+  color: green;
+}
+
+.key {
+  height: 80px;
+  width: 20px;
+  margin: 1px;
+}
+
+.white {
+  background-color: white;
+}
+
+.black {
+  background-color: black;
+  width: 10px;
+  height: 50px;
+}
+
+.pressed {
+  background-color: gray;
+}

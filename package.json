@@ -33,6 +33,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@preact/signals": "^1.2.0",
     "preact": "^10.16.0",
     "preact-custom-element": "^4.2.1",
     "preact-shadow-dom": "^1.0.1"
