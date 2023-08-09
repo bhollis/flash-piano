@@ -1,16 +1,20 @@
 import { computed, signal, useSignal, useSignalEffect } from '@preact/signals';
 import './Piano.css';
 
+// TODO: start with C
 const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
 const noteFlat = ['A', 'Bb', 'B', 'C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab'];
 interface PianoKeyData {
   // TODO: note name including sharp
   // TODO: note indexes?
-  baseNote: 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G';
   names: string[];
+  /** Note name including octave and accidental */
+  fullNote: string;
+  /** Sharp-oriented note name, without octave */
   note: string;
   sharp: boolean;
   octave: number;
+  // TODO: use midi note more places
   midiNote: number;
 }
 const keyboardKeys = ['a', 'w', 's', 'e', 'd', 'f', 't', 'g', 'y', 'h', 'u', 'j', 'k'];
@@ -29,12 +33,11 @@ const keys: PianoKeyData[] = [];
 for (let i = 0; i < 88; i++) {
   const note = notes[i % notes.length];
   const sharp = note.endsWith('#');
-  const baseNote = note[0] as PianoKeyData['baseNote'];
   const octave = Math.floor(i / 12) + 1;
   keys.push({
-    note: `${note}${octave}`,
+    fullNote: `${note}${octave}`,
+    note,
     names: [...new Set([note, noteFlat[i % notes.length]])],
-    baseNote,
     sharp,
     octave,
     midiNote: i + 21,
@@ -51,14 +54,14 @@ function keyFromKeyboardEvent(e: KeyboardEvent, currentOctave: number) {
     // Allow the keys to wrap to the next octave
     const octave = currentOctave + Math.floor(noteIndex / notes.length);
     const noteName = notes[noteIndex % notes.length];
-    const pianoKey = keys.find((k) => k.octave === octave && k.baseNote === noteName);
+    const pianoKey = keys.find((k) => k.octave === octave && k.note === noteName);
     return pianoKey;
   }
 }
 
 function findKeyboardKey(pianoKey: PianoKeyData, currentOctave: number) {
   const offset = pianoKey.octave - currentOctave;
-  const keyIndex = notes.indexOf(pianoKey.baseNote) - 3 + offset * notes.length;
+  const keyIndex = notes.indexOf(pianoKey.note) - 3 + offset * notes.length;
   return localizedKeyboardKeys[keyIndex];
 }
 
@@ -72,7 +75,6 @@ async function getMidi() {
     triedMidi = true;
     navigator.requestMIDIAccess().then(
       (midiAccess) => {
-        console.log('Midi!', midiAccess);
         midi.value = midiAccess;
       },
       () => {
@@ -236,6 +238,7 @@ function makeAudio() {
 const [playTone, stopTone] = makeAudio();
 
 export default function Piano() {
+  // TODO: these could just be midi notes?
   const pressedKeys = useSignal<PianoKeyData[]>([]);
   const octave = useSignal(4);
   const showNoteNames = useSignal(true);
@@ -295,10 +298,6 @@ export default function Piano() {
           handleKeyUp(pianoKey);
         }
       };
-    }
-
-    for (const output of currentMidi.outputs.values()) {
-      console.log({ output });
     }
 
     // TODO: better cleanup, listen to status change events
