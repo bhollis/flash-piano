@@ -114,6 +114,12 @@ export function usePiano() {
       }
     }
 
-    return [playTone, stopTone] as const;
+    function stopAllTones() {
+      for (const note of voices.keys()) {
+        stopTone(note);
+      }
+    }
+
+    return [playTone, stopTone, stopAllTones] as const;
   }, []);
 }

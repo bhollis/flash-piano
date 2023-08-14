@@ -75,7 +75,7 @@ export default function Piano() {
   const [octave, setOctave] = useState(4);
   const [showNoteNames, setShowNoteNames] = useState(true);
   const [showKeyboardMapping, setShowKeyboardMapping] = useState(true);
-  const [playTone, stopTone] = usePiano();
+  const [playTone, stopTone, stopAllTones] = usePiano();
 
   // highlight?: Scale | Chord;
 
@@ -91,7 +91,7 @@ export default function Piano() {
     stopTone(midiNote);
   };
 
-  const [startMidi, midiDeviceNames] = useMidi(handleKeyDown, handleKeyUp);
+  const [startMidi, stopMidi, midiDeviceNames] = useMidi(handleKeyDown, handleKeyUp);
 
   const handleKeyboardKeyDown = (e: KeyboardEvent) => {
     const pianoKey = keyFromKeyboardEvent(e, octave);
@@ -111,12 +111,20 @@ export default function Piano() {
     startMidi();
   };
 
+  const handleBlur = () => {
+    stopMidi();
+    setPressedKeys([]);
+    stopAllTones();
+  };
+
   return (
     <div
       tabIndex={0}
+      role="application"
       onKeyDown={handleKeyboardKeyDown}
       onKeyUp={handleKeyboardKeyUp}
       onFocus={handleFocus}
+      onBlur={handleBlur}
     >
       <div className="keyboard">
         {keys.map((key) => (
@@ -131,20 +139,21 @@ export default function Piano() {
           />
         ))}
       </div>
-      <button type="button" onClick={() => setShowKeyboardMapping((s) => !s)}>
-        Toggle Keyboard Keys
-      </button>
-      <button type="button" onClick={() => setShowNoteNames((s) => !s)}>
-        Toggle Note Names
-      </button>
-      <button type="button" onClick={() => setOctave((s) => Math.min(7, s + 1))}>
-        Octave Up
-      </button>
-      <button type="button" onClick={() => setOctave((s) => Math.max(0, s - 1))}>
-        Octave Down
-      </button>
-      <div>{midiDeviceNames}</div>
-      <div>{JSON.stringify(pressedKeys)}</div>
+      <div className="buttons">
+        <button type="button" onClick={() => setShowKeyboardMapping((s) => !s)}>
+          Toggle Keyboard Keys
+        </button>
+        <button type="button" onClick={() => setShowNoteNames((s) => !s)}>
+          Toggle Note Names
+        </button>
+        <button type="button" onClick={() => setOctave((s) => Math.min(7, s + 1))}>
+          Octave Up
+        </button>
+        <button type="button" onClick={() => setOctave((s) => Math.max(0, s - 1))}>
+          Octave Down
+        </button>
+        {midiDeviceNames.length > 0 && <div>Connected MIDI Devices: {midiDeviceNames}</div>}
+      </div>
     </div>
   );
 }
@@ -180,10 +189,10 @@ function Key({
         .join(' ')}
     >
       <div onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}>
-        <div className="keyhint">{keyboardKey}</div>
+        {keyboardKey && <div className="keyhint">{keyboardKey}</div>}
         {noteNames?.map((noteName) => (
           <div className="keyhint" key={noteName}>
-            {noteName}
+            {noteName.replace('b', '♭').replace('#', '♯')}
           </div>
         ))}
       </div>

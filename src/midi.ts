@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
-// TODO: connect/disconnect midi on page visibility / focus
-
 /**
  * Listen for midi notes from connected midi devices. Returns a function to initialize the midi
  * connection (should be started on focus or click) and a list of connected device names.
@@ -33,12 +31,15 @@ export function useMidi(
     setMidiAccess(await initMidi());
   }, [initMidi]);
 
+  const stopMidi = () => {
+    setMidiAccess(undefined);
+  };
+
   useEffect(() => {
     const currentMidi = midiAccess;
     if (!currentMidi) {
       return;
     }
-
     const handleMidiMessage = (message: Event & { data?: Uint8Array }) => {
       const data = message.data!;
       const signal = data[0] & 0xf0;
@@ -51,14 +52,14 @@ export function useMidi(
       }
     };
 
-    function listenToPorts(this: MIDIAccess) {
+    const listenToPorts = function (this: MIDIAccess) {
       const names: string[] = [];
       for (const input of this.inputs.values()) {
         input.addEventListener('midimessage', handleMidiMessage);
         names.push(input.name ?? 'Unknown');
       }
       setMidiDeviceNames(names);
-    }
+    };
 
     midiAccess.addEventListener('statechange', listenToPorts);
     listenToPorts.call(midiAccess);
@@ -69,8 +70,9 @@ export function useMidi(
         input.removeEventListener('midimessage', handleMidiMessage);
       }
       currentMidi.removeEventListener('statechange', listenToPorts);
+      setMidiDeviceNames([]);
     };
-  });
+  }, [midiAccess, onKeyDown, onKeyUp]);
 
-  return [startMidi, midiDeviceNames] as const;
+  return [startMidi, stopMidi, midiDeviceNames] as const;
 }
