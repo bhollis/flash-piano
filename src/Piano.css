@@ -1,5 +1,5 @@
 .keyboard {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: #aaa;
   padding: 0.5em;
   display: flex;
   flex-direction: row;
@@ -7,21 +7,32 @@
 }
 
 .key {
+}
+
+.white > div {
+  background-color: white;
   height: 80px;
   width: 20px;
   margin: 1px;
 }
 
-.white {
-  background-color: white;
-}
-
 .black {
+  width: 0;
+}
+.black > div {
+  position: relative;
+  left: -7px;
   background-color: black;
   width: 10px;
   height: 50px;
+  border: 2px solid #aaa;
+  border-top: none;
 }
 
-.pressed {
-  background-color: gray;
+.pressed.white > div {
+  background: linear-gradient(0deg, #888, white);
+}
+
+.pressed.black > div {
+  background: linear-gradient(0deg, #888, black);
 }

@@ -177,11 +177,11 @@ function Key({
       className={['key', black ? 'black' : 'white', pressed ? 'pressed' : undefined]
         .filter(Boolean)
         .join(' ')}
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
     >
-      {noteNames?.map((noteName) => <div key={noteName}>{noteName}</div>)}
-      <div>{keyboardKey}</div>
+      <div onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}>
+        {noteNames?.map((noteName) => <div key={noteName}>{noteName}</div>)}
+        <div>{keyboardKey}</div>
+      </div>
     </div>
   );
 }
