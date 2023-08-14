@@ -1,4 +1,4 @@
-import { useSignal } from '@preact/signals';
+import { useState } from 'preact/hooks';
 import './Piano.css';
 import { useMidi } from './midi';
 import { usePiano } from './sound';
@@ -69,38 +69,38 @@ function findKeyboardKey(pianoKey: PianoKeyData, currentOctave: number) {
 
 export default function Piano() {
   // TODO: these could just be midi notes?
-  const pressedKeys = useSignal<number[]>([]);
+  const [pressedKeys, setPressedKeys] = useState<number[]>([]);
   // This is the octave the keyboard keys are aligned with
-  const octave = useSignal(4);
-  const showNoteNames = useSignal(true);
-  const showKeyboardMapping = useSignal(true);
+  const [octave, setOctave] = useState(4);
+  const [showNoteNames, setShowNoteNames] = useState(true);
+  const [showKeyboardMapping, setShowKeyboardMapping] = useState(true);
   const [playTone, stopTone] = usePiano();
 
   // highlight?: Scale | Chord;
 
   const handleKeyDown = (midiNote: number) => {
-    if (!pressedKeys.value.includes(midiNote)) {
-      pressedKeys.value = [...pressedKeys.value, midiNote];
+    if (!pressedKeys.includes(midiNote)) {
+      setPressedKeys([...pressedKeys, midiNote]);
       playTone(midiNote);
     }
   };
 
   const handleKeyUp = (midiNote: number) => {
-    pressedKeys.value = pressedKeys.value.filter((k) => k !== midiNote);
+    setPressedKeys((pressedKeys) => pressedKeys.filter((k) => k !== midiNote));
     stopTone();
   };
 
   const [startMidi, midiDeviceNames] = useMidi(handleKeyDown, handleKeyUp);
 
   const handleKeyboardKeyDown = (e: KeyboardEvent) => {
-    const pianoKey = keyFromKeyboardEvent(e, octave.value);
+    const pianoKey = keyFromKeyboardEvent(e, octave);
     if (pianoKey) {
       handleKeyDown(pianoKey.midiNote);
     }
   };
 
   const handleKeyboardKeyUp = (e: KeyboardEvent) => {
-    const pianoKey = keyFromKeyboardEvent(e, octave.value);
+    const pianoKey = keyFromKeyboardEvent(e, octave);
     if (pianoKey) {
       handleKeyUp(pianoKey.midiNote);
     }
@@ -121,24 +121,29 @@ export default function Piano() {
         {keys.map((key) => (
           <Key
             key={key.note}
-            keyboardKey={showKeyboardMapping ? findKeyboardKey(key, octave.value) : undefined}
+            keyboardKey={showKeyboardMapping ? findKeyboardKey(key, octave) : undefined}
             noteNames={showNoteNames ? key.names : undefined}
-            pressed={pressedKeys.value.includes(key.midiNote)}
+            pressed={pressedKeys.includes(key.midiNote)}
             black={key.sharp}
             onKeyDown={() => handleKeyDown(key.midiNote)}
             onKeyUp={() => handleKeyUp(key.midiNote)}
           />
         ))}
       </div>
-      <div>
-        {JSON.stringify({
-          pressedKeys: pressedKeys.value,
-          octave: octave.value,
-          showNoteNames: showNoteNames.value,
-          showKeyboardMapping: showKeyboardMapping.value,
-        })}
-      </div>
+      <button type="button" onClick={() => setShowKeyboardMapping((s) => !s)}>
+        Toggle Keyboard Keys
+      </button>
+      <button type="button" onClick={() => setShowNoteNames((s) => !s)}>
+        Toggle Note Names
+      </button>
+      <button type="button" onClick={() => setOctave((s) => Math.min(7, s + 1))}>
+        Octave Up
+      </button>
+      <button type="button" onClick={() => setOctave((s) => Math.max(0, s - 1))}>
+        Octave Down
+      </button>
       <div>{midiDeviceNames}</div>
+      <div>{JSON.stringify(pressedKeys)}</div>
     </div>
   );
 }
