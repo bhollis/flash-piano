@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import './Piano.css';
 import { useMidi } from './midi';
 import { usePiano } from './sound';
@@ -117,6 +117,16 @@ export default function Piano() {
     stopAllTones();
   };
 
+  // Center the keyboard
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (ref.current) {
+      ref.current
+        .querySelector('* > div:nth-child(46)')
+        ?.scrollIntoView({ behavior: 'instant', block: 'center', inline: 'center' });
+    }
+  }, []);
+
   return (
     <div
       tabIndex={0}
@@ -126,7 +136,7 @@ export default function Piano() {
       onFocus={handleFocus}
       onBlur={handleBlur}
     >
-      <div className="keyboard">
+      <div className="keyboard" ref={ref}>
         {keys.map((key) => (
           <Key
             key={key.note}
