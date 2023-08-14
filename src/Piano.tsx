@@ -7,16 +7,11 @@ import { usePiano } from './sound';
 const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
 const noteFlat = ['A', 'Bb', 'B', 'C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab'];
 interface PianoKeyData {
-  // TODO: note name including sharp
-  // TODO: note indexes?
   names: string[];
-  /** Note name including octave and accidental */
-  fullNote: string;
   /** Sharp-oriented note name, without octave */
   note: string;
   sharp: boolean;
   octave: number;
-  // TODO: use midi note more places
   midiNote: number;
 }
 const keyboardKeys = ['a', 'w', 's', 'e', 'd', 'f', 't', 'g', 'y', 'h', 'u', 'j', 'k'];
@@ -38,7 +33,6 @@ for (let i = 0; i < 88; i++) {
   const sharp = note.endsWith('#');
   const octave = Math.floor(i / 12) + 1;
   keys.push({
-    fullNote: `${note}${octave}`,
     note,
     names: [...new Set([note, noteFlat[i % notes.length]])],
     sharp,
