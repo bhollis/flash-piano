@@ -1,6 +1,7 @@
 import { useSignal } from '@preact/signals';
 import './Piano.css';
 import { useMidi } from './midi';
+import { usePiano } from './sound';
 
 // TODO: start with C
 const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
@@ -66,52 +67,6 @@ function findKeyboardKey(pianoKey: PianoKeyData, currentOctave: number) {
   return localizedKeyboardKeys[keyIndex];
 }
 
-export function mtof(midi: number): number {
-  return 440 * Math.pow(2, (midi - 69) / 12);
-}
-
-// TODO: should each piano own an audio context or should they all share?
-
-function makeAudio() {
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const gainNode = audioCtx.createGain();
-  gainNode.connect(audioCtx.destination);
-  gainNode.gain.value = 0.1;
-
-  let osc: OscillatorNode | undefined;
-
-  return [
-    function playTone(midiNote: number) {
-      if (osc) {
-        osc.stop();
-      }
-      gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
-      gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-      osc = audioCtx.createOscillator();
-      osc.type = 'triangle';
-      osc.frequency.value = mtof(midiNote);
-      osc.connect(gainNode);
-      osc.start();
-    },
-    () => {
-      if (osc) {
-        const currentOsc = osc;
-        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
-        setTimeout(() => {
-          currentOsc.stop();
-          if (osc === currentOsc) {
-            osc = undefined;
-          }
-        }, 1000);
-      }
-    },
-  ] as const;
-}
-
-// TODO: polyphony, sampling, start on focus
-const [playTone, stopTone] = makeAudio();
-
 export default function Piano() {
   // TODO: these could just be midi notes?
   const pressedKeys = useSignal<number[]>([]);
@@ -119,6 +74,8 @@ export default function Piano() {
   const octave = useSignal(4);
   const showNoteNames = useSignal(true);
   const showKeyboardMapping = useSignal(true);
+  const [playTone, stopTone] = usePiano();
+
   // highlight?: Scale | Chord;
 
   const handleKeyDown = (midiNote: number) => {
