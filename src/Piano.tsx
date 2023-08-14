@@ -87,7 +87,7 @@ export default function Piano() {
 
   const handleKeyUp = (midiNote: number) => {
     setPressedKeys((pressedKeys) => pressedKeys.filter((k) => k !== midiNote));
-    stopTone();
+    stopTone(midiNote);
   };
 
   const [startMidi, midiDeviceNames] = useMidi(handleKeyDown, handleKeyUp);
