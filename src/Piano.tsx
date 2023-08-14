@@ -24,8 +24,9 @@ let localizedKeyboardKeys = keyboardKeys;
 if (navigator.keyboard) {
   const keyboard = navigator.keyboard;
   keyboard.getLayoutMap().then((keyboardLayoutMap) => {
-    localizedKeyboardKeys = keyboardKeys.map((k) => keyboardLayoutMap.get(`Key${k.toUpperCase()}`));
-    console.log({ keyboardKeys, localizedKeyboardKeys });
+    localizedKeyboardKeys = keyboardKeys.map(
+      (k) => keyboardLayoutMap.get(`Key${k.toUpperCase()}`) ?? k,
+    );
   });
 }
 
@@ -179,8 +180,12 @@ function Key({
         .join(' ')}
     >
       <div onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}>
-        {noteNames?.map((noteName) => <div key={noteName}>{noteName}</div>)}
-        <div>{keyboardKey}</div>
+        <div className="keyhint">{keyboardKey}</div>
+        {noteNames?.map((noteName) => (
+          <div className="keyhint" key={noteName}>
+            {noteName}
+          </div>
+        ))}
       </div>
     </div>
   );
