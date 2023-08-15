@@ -11,7 +11,9 @@
   "umd": "umd/index.js",
   "files": [
     "lib/index.js",
-    "lib/index.js.map"
+    "lib/index.js.map",
+    "umd/index.js",
+    "umd/index.js.map"
   ],
   "scripts": {
     "start": "run-p --aggregate-output -l build typecheck lint",

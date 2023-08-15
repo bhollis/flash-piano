@@ -13,7 +13,7 @@ The Flash Piano is a web component, meaning you can use it in any website from a
     <script src="https://unpkg.com/flash-piano"></script>
   </head>
   <body>
-    <flash-piano>
+    <flash-piano></flash-piano>
   </body>
 </html>
 ```
