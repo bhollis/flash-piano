@@ -1,5 +1,13 @@
+:host {
+  display: block; /* by default, custom elements are display: inline */
+  contain: content; /* CSS containment FTW. */
+
+  --piano-key-width: 30px;
+  --piano-keybed-color: #aaa;
+}
+
 .keyboard {
-  background-color: #aaa;
+  background-color: var(--piano-keybed-color);
   padding: 2px;
   display: flex;
   flex-direction: row;
@@ -7,8 +15,6 @@
   margin-bottom: 4px;
   overflow-x: auto;
   overflow-y: hidden;
-
-  --piano-key-width: 30px;
 }
 
 .key > div {
@@ -38,7 +44,7 @@
   background-color: black;
   aspect-ratio: 10 / 50;
   width: calc(var(--piano-key-width) / 2);
-  border: 2px solid #aaa;
+  border: 2px solid var(--piano-keybed-color);
   border-top: none;
 }
 

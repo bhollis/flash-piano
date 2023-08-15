@@ -121,15 +121,17 @@ export default function Piano() {
   }, []);
 
   return (
-    <div
-      tabIndex={0}
-      role="application"
-      onKeyDown={handleKeyboardKeyDown}
-      onKeyUp={handleKeyboardKeyUp}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-    >
-      <div className="keyboard" ref={ref}>
+    <>
+      <div
+        className="keyboard"
+        ref={ref}
+        tabIndex={0}
+        role="application"
+        onKeyDown={handleKeyboardKeyDown}
+        onKeyUp={handleKeyboardKeyUp}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      >
         {keys.map((key) => (
           <Key
             key={key.note}
@@ -157,7 +159,7 @@ export default function Piano() {
         </button>
         {midiDeviceNames.length > 0 && <div>Connected MIDI Devices: {midiDeviceNames}</div>}
       </div>
-    </div>
+    </>
   );
 }
 
