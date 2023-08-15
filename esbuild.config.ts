@@ -8,6 +8,7 @@ const config: BuildOptions = {
   jsx: 'automatic',
   minify: true,
   sourcemap: true,
+  loader: { '.css': 'text' },
   alias: {
     react: 'preact/compat',
     'react-dom/test-utils': 'preact/test-utils',

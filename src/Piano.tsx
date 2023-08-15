@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import './Piano.css';
 import { useMidi } from './midi';
 import { usePiano } from './sound';
 
