@@ -1,6 +1,6 @@
 {
   "name": "flash-piano",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A web component for rendering interactive piano keyboards",
   "type": "module",
   "repository": "https://github.com/bhollis/flash-piano",
@@ -8,6 +8,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "module": "lib/index.js",
+  "unpkg": "umd/index.js",
   "umd": "umd/index.js",
   "files": [
     "lib/index.js",
