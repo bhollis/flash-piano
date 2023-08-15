@@ -1,5 +1,5 @@
 import { BuildOptions, build, context } from 'esbuild';
-import { copyFile } from 'node:fs/promises';
+import { copyFile, mkdir } from 'node:fs/promises';
 
 const config: BuildOptions = {
   entryPoints: ['src/index.js'],
@@ -17,6 +17,7 @@ const config: BuildOptions = {
   },
 };
 
+await mkdir('lib/', { recursive: true });
 await copyFile('src/index.html', 'lib/index.html');
 
 const devMode = process.argv.includes('--dev');

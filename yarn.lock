@@ -213,18 +213,6 @@
     picocolors "^1.0.0"
     tslib "^2.6.0"
 
-"@preact/signals-core@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@preact/signals-core/-/signals-core-1.4.0.tgz#ff67fca60f144437f3894ab60272eb57cf8cafaf"
-  integrity sha512-5iYoZBhELLIhUQceZI7sDTQWPb+xcVSn2qk8T/aNl/VMh+A4AiPX9YRSh4XO7fZ6pncrVxl1Iln82poVqYVbbw==
-
-"@preact/signals@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@preact/signals/-/signals-1.2.0.tgz#083a0557df87377278503fbb2b5efdb0afd1df97"
-  integrity sha512-hrPOJ6L4XI/6iFJ++JitYG7W22E0+oNDkWH9W1gCutcKYCJq5tvhKcnxkLShCuctNZkwUBpu4XeIiVr5wC4NnA==
-  dependencies:
-    "@preact/signals-core" "^1.4.0"
-
 "@types/json-schema@^7.0.12", "@types/json-schema@^7.0.9":
   version "7.0.12"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.12.tgz#d70faba7039d5fca54c83c7dbab41051d2b6f6cb"
@@ -2089,11 +2077,6 @@ pify@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-3.0.0.tgz#e5a4acd2c101fdf3d9a4d07f0dbc4db49dd28176"
   integrity sha512-C3FsVNH1udSEX48gGX1xfvwTWfsYWj5U+8/uK15BGzIGrKoUpghX8hWZwa/OFnakBiiVNmBvemTJR5mcy7iPcg==
-
-preact-shadow-dom@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/preact-shadow-dom/-/preact-shadow-dom-1.0.1.tgz#5286f4ab6edc067188431d5a9de35408a7a0ac2a"
-  integrity sha512-KVWF983Ju9w+zt6KXVst/A62moecXipjpVIYQ8EjZfkPe+XFKC3LyypG9TlBTwUdwPSCjMDJSey5Zz5hEdCDvQ==
 
 preact@^10.16.0:
   version "10.16.0"

@@ -6,6 +6,11 @@
   "repository": "https://github.com/bhollis/flash-piano",
   "author": "Ben Hollis <ben@benhollis.net>",
   "license": "MIT",
+  "main": "lib/index.js",
+  "files": [
+    "lib/index.js",
+    "lib/index.js.map"
+  ],
   "scripts": {
     "start": "run-p --aggregate-output -l build typecheck lint",
     "build": "esbuild esbuild.config.ts --platform=node --outfile=ts-out/esbuild.mjs && node ts-out/esbuild.mjs",
@@ -32,8 +37,6 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@preact/signals": "^1.2.0",
-    "preact": "^10.16.0",
-    "preact-shadow-dom": "^1.0.1"
+    "preact": "^10.16.0"
   }
 }
