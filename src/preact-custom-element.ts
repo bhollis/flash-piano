@@ -2,8 +2,6 @@ import { ComponentType, cloneElement, h, hydrate, render } from 'preact';
 
 // adoptStylesheets ripped from lit ReactiveElement, the rest forked from preact-custom-element
 
-const cssTagCache = new Map<string, CSSStyleSheet>();
-
 /**
  * Whether the current browser supports `adoptedStyleSheets`.
  */
@@ -12,44 +10,40 @@ export const supportsAdoptingStyleSheets: boolean =
   'adoptedStyleSheets' in Document.prototype &&
   'replace' in CSSStyleSheet.prototype;
 
-function styleSheet(cssText: string): CSSStyleSheet {
-  let styleSheet = cssTagCache.get(cssText);
-  if (styleSheet === undefined) {
-    (styleSheet = new CSSStyleSheet()).replaceSync(cssText);
-    cssTagCache.set(cssText, styleSheet);
-  }
-  return styleSheet;
-}
-
-const adoptStyles = (renderRoot: ShadowRoot, styles: string) => {
-  if (supportsAdoptingStyleSheets) {
-    renderRoot.adoptedStyleSheets = [styleSheet(styles)];
-  } else {
-    // Rely on browsers having an optimization for duplicate styles
-    const style = document.createElement('style');
-
-    /*
-    const nonce = (global as any).litNonce;
-    if (nonce !== undefined) {
-      style.setAttribute('nonce', nonce);
-    }
-    */
-    style.textContent = styles;
-    renderRoot.appendChild(style);
-  }
-};
-
 export default function register(
   Component: ComponentType,
   tagName: string,
   propNames: string[],
   css: string,
 ) {
+  let styleSheet: CSSStyleSheet | undefined;
+  const adoptStyles = supportsAdoptingStyleSheets
+    ? (renderRoot: ShadowRoot) => {
+        // Build the constructible stylesheet once, on demand
+        if (styleSheet === undefined) {
+          (styleSheet = new CSSStyleSheet()).replaceSync(css);
+        }
+        renderRoot.adoptedStyleSheets = [styleSheet];
+      }
+    : (renderRoot: ShadowRoot) => {
+        // Rely on browsers having an optimization for duplicate styles
+        const style = document.createElement('style');
+
+        /*
+      const nonce = (global as any).litNonce;
+      if (nonce !== undefined) {
+        style.setAttribute('nonce', nonce);
+      }
+      */
+        style.textContent = css;
+        renderRoot.appendChild(style);
+      };
+
   function PreactElement() {
     const inst = Reflect.construct(HTMLElement, [], PreactElement);
     inst._vdomComponent = Component;
     inst._root = inst.attachShadow({ mode: 'closed' });
-    adoptStyles(inst._root, css);
+    adoptStyles(inst._root);
     return inst;
   }
   PreactElement.prototype = Object.create(HTMLElement.prototype);
