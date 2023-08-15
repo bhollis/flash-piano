@@ -4,8 +4,10 @@ import { copyFile, mkdir } from 'node:fs/promises';
 const config: BuildOptions = {
   entryPoints: ['src/index.js'],
   bundle: true,
+  external: ['preact', 'preact/hooks'],
   outdir: 'lib',
   jsx: 'automatic',
+  format: 'esm',
   minify: true,
   sourcemap: true,
   loader: { '.css': 'text' },
@@ -31,5 +33,8 @@ if (devMode) {
   console.log({ host, port });
 } else {
   let result = await build(config);
-  console.log(process.argv, result);
+
+  let resultUmd = await build({ ...config, external: [], outdir: 'umd' });
+
+  console.log(process.argv, result, resultUmd);
 }
