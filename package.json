@@ -15,7 +15,6 @@
     "lint": "eslint src --ext .js,.ts,.tsx --fix"
   },
   "devDependencies": {
-    "@types/preact-custom-element": "^4.0.1",
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
     "esbuild": "^0.18.19",
@@ -35,7 +34,6 @@
   "dependencies": {
     "@preact/signals": "^1.2.0",
     "preact": "^10.16.0",
-    "preact-custom-element": "^4.2.1",
     "preact-shadow-dom": "^1.0.1"
   }
 }
