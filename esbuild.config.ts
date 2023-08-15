@@ -4,8 +4,7 @@ import { copyFile, mkdir } from 'node:fs/promises';
 const config: BuildOptions = {
   entryPoints: ['src/index.js'],
   bundle: true,
-  external: ['preact', 'preact/hooks'],
-  outdir: 'lib',
+  outdir: 'umd',
   jsx: 'automatic',
   format: 'esm',
   minify: true,
@@ -20,7 +19,8 @@ const config: BuildOptions = {
 };
 
 await mkdir('lib/', { recursive: true });
-await copyFile('src/index.html', 'lib/index.html');
+await mkdir('umd/', { recursive: true });
+await copyFile('src/index.html', 'umd/index.html');
 
 const devMode = process.argv.includes('--dev');
 
@@ -28,13 +28,15 @@ if (devMode) {
   let ctx = await context(config);
 
   let { host, port } = await ctx.serve({
-    servedir: 'lib',
+    servedir: 'umd',
   });
   console.log({ host, port });
 } else {
+  // UMD build
   let result = await build(config);
 
-  let resultUmd = await build({ ...config, external: [], outdir: 'umd' });
+  // Importable NPM build (ESM)
+  let resultUmd = await build({ ...config, external: ['preact', 'preact/hooks'], outdir: 'lib' });
 
   console.log(process.argv, result, resultUmd);
 }
